@@ -1,0 +1,37 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy:v2.11.0
+    command: serve
+    environment:
+      NTFY_BASE_URL: "http://localhost:9999"          # 외부 노출 도메인으로 변경
+      NTFY_UPSTREAM_BASE_URL: "https://ntfy.sh"       # iOS 알림 릴레이
+      NTFY_CACHE_FILE: "/var/lib/ntfy/cache.db"
+      NTFY_ATTACHMENT_CACHE_DIR: "/var/lib/ntfy/attachments"
+      NTFY_LOG_LEVEL: "info"
+    volumes:
+      - ntfy-data:/var/lib/ntfy
+    ports:
+      - "9999:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --tries=1 http://localhost/v1/health -O- | grep -c ok || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  oncall:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      NTFY_BASE_URL: "http://ntfy:80"
+      # 외부에서 접근 가능한 URL (ntfy 버튼의 Ack 콜백 주소)
+      ONCALL_ACK_BASE_URL: "http://localhost:8080"
+      ONCALL_ESCALATION_TIMEOUT_SECONDS: "300"
+    depends_on:
+      ntfy:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  ntfy-data:
