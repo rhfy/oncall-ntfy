@@ -4,7 +4,9 @@ builder = "DOCKERFILE"
 dockerfilePath = "ntfy/Dockerfile"
 
 [deploy]
+# Railway가 주입하는 $PORT를 ntfy가 사용하도록 직접 지정
+startCommand = "ntfy serve --listen-http :$PORT"
 healthcheckPath = "/v1/health"
-healthcheckTimeout = 30
+healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
