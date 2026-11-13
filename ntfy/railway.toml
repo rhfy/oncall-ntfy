@@ -1,11 +1,9 @@
 # ntfy 서비스 Railway 설정
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "ntfy/Dockerfile"
+# dockerfilePath는 Railway UI에서 /ntfy/Dockerfile 로 설정
 
 [deploy]
-# Railway가 주입하는 $PORT를 ntfy가 사용하도록 직접 지정
-startCommand = "ntfy serve --listen-http :$PORT"
 healthcheckPath = "/v1/health"
 healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"

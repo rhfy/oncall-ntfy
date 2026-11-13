@@ -1,7 +1,7 @@
 # oncall Spring Boot 서비스 Railway 설정
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+# dockerfilePath는 Railway UI에서 각 서비스별로 설정 (/Dockerfile, /ntfy/Dockerfile)
 
 [deploy]
 healthcheckPath = "/actuator/health"
